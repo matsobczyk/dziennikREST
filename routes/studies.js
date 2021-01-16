@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Study = require('../models/Study');
-
+const verification = require ('./verifyToken');
 //Get all studies
-router.get('/', async (req, res) => {
+router.get('/',verification, async (req, res) => {
     try{
         const studies = await Study.find();
         res.json(studies);
