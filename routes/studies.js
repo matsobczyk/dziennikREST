@@ -16,7 +16,10 @@ router.get('/', async (req, res) => {
 //Post new study
 router.post('/', async (req, res) => {
     const study = new Study({
-        title: req.body.title
+        title: req.body.title,
+        grades: req.body.grades,
+        user : req.body.user,
+        date: req.body.date
     });
     try{
         const savedStudy = await study.save();
@@ -62,7 +65,7 @@ router.delete('/:studyId', async (req, res) => {
 //Delete all studies
 router.delete("/", async (req, res) =>{
     try{
-        const removedStudies = await Study.deleteMany({ title: /^inf/ });
+        const removedStudies = await Study.deleteMany({ title: /^mat/ });
         res.json(removedStudies);
     }catch(err){
         res.json(err);

@@ -2,11 +2,16 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv')
 const studiesRoute = require('./routes/studies');
-require('dotenv/config');
+const authRoute = require('./routes/auth');
+
+dotenv.config();
 
 app.use(bodyParser.json());
 app.use('/studies', studiesRoute);
+app.use('/user', authRoute);
+
 
 mongoose.connect(
     process.env.DB_CONNECTION,
