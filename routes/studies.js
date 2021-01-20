@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Study = require('../models/Study');
 const verification = require ('./verifyToken');
-//Get all studies
+
 router.get('/',verification, async (req, res) => {
     try{
-        const studies = await Study.find();
+        const studies = await Study.find({user: req.user._id});
         res.json(studies);
     }
     catch(err){
@@ -14,11 +14,11 @@ router.get('/',verification, async (req, res) => {
 })
 
 //Post new study
-router.post('/', async (req, res) => {
+router.post('/', verification, async (req, res) => {
     const study = new Study({
         title: req.body.title,
         grades: req.body.grades,
-        user : req.body.user,
+        user : req.user._id,
         date: req.body.date
     });
     try{
@@ -65,7 +65,7 @@ router.delete('/:studyId', async (req, res) => {
 //Delete all studies
 router.delete("/", async (req, res) =>{
     try{
-        const removedStudies = await Study.deleteMany({ title: /^mat/ });
+        const removedStudies = await Study.deleteMany({});
         res.json(removedStudies);
     }catch(err){
         res.json(err);

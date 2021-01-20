@@ -1,4 +1,6 @@
+const { request } = require('express');
 const mongoose = require('mongoose');
+const User = require('./User');
 
 const StudySchema = mongoose.Schema({
     title: {
@@ -10,8 +12,7 @@ const StudySchema = mongoose.Schema({
         required: true
     },
     user: {
-        type: String,
-        required: true
+        type: String
     },
     date: {
         type: Date,

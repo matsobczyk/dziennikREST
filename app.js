@@ -9,8 +9,9 @@ const authRoute = require('./routes/auth');
 dotenv.config();
 
 app.use(bodyParser.json());
-app.use('/studies', studiesRoute);
 app.use('/user', authRoute);
+app.use('/studies', studiesRoute);
+
 
 
 mongoose.connect(
@@ -21,7 +22,7 @@ mongoose.connect(
     );
 
 app.get('/', (req, res) => {
-    res.send('this is home')
+    res.send('Welcome to Student Grades app!')
 })
 
 app.listen(3000)
