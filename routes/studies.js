@@ -1,76 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const Study = require('../models/Study');
-const verification = require ('./verifyToken');
+const router = require('express').Router();
+const verification = require('../middlewares/verifyToken');
+const StudiesController = require('../controllers/studies');
+const statisticsRoute = require('../routes/statistics');
+router.use('/statistics', statisticsRoute);
 
-router.get('/',verification, async (req, res) => {
-    try{
-        const studies = await Study.find({user: req.user._id});
-        res.json(studies);
-    }
-    catch(err){
-        res.json({message:"blad"});
-    }
-})
 
-//Post new study
-router.post('/', verification, async (req, res) => {
-    const study = new Study({
-        title: req.body.title,
-        grades: req.body.grades,
-        user : req.user._id,
-        date: req.body.date
-    });
-    try{
-        const savedStudy = await study.save();
-        res.json(savedStudy);
-    }catch(err){
-        res.json({message: err});
-    }
-})
-
-//Get study by id
-router.get('/:studyId', async (req, res) => {
-    try{
-        const study = await Study.findById(req.params.studyId);
-        res.json(study);
-    }catch(err){
-        res.json(err);
-    }
-})
-
-//Patch study by id
-router.patch('/:studyId', async (req, res) => {
-    try{
-        const patchedStudy = await Study.updateOne(
-            {_id: req.params.studyId}, 
-            {$set: {title: req.body.title}}
-            );
-        res.json(patchedStudy);
-    }catch(err){
-        res.json(err);
-    }
-})
-
-//Delete study by id
-router.delete('/:studyId', async (req, res) => {
-    try{
-        const removedStudy = await Study.deleteOne({_id: req.params.studyId});
-        res.json(removedStudy);
-    }catch(err){
-        res.json(err);
-    }
-})
-
-//Delete all studies
-router.delete("/", async (req, res) =>{
-    try{
-        const removedStudies = await Study.deleteMany({});
-        res.json(removedStudies);
-    }catch(err){
-        res.json(err);
-    }
-    
-})
+router.get('/', verification, StudiesController.allStudies);
+router.post('/', verification, StudiesController.newStudy);
+router.get('/:studyId', verification,  StudiesController.detailsStudy);
+router.patch('/:studyId', verification,  StudiesController.updateStudy);
+router.delete('/:studyId', verification,  StudiesController.deleteStudy);
 
 module.exports = router;
